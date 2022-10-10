@@ -1,0 +1,8 @@
+table_name("system_security_registry")
+description("Security options configured on the windows registry. This table mimics secedit tool securitypolicy export output.")
+schema([
+    Column("RegistryName", TEXT, "Path to the registry key and value containing the security option", index=True),
+    Column("RegistryType", INTEGER, "Number that defines the registry type of the security option"),
+    Column("RegistryValue", TEXT, "Value of the security option in the registry"),
+])
+implementation("system_security@genSystemSecurityRegistry")

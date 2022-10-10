@@ -302,6 +302,8 @@ function(generateNativeTables)
     "windows/shellbags.table:windows"
     "windows/prefetch.table:windows"
     "windows/tpm_info.table:windows"
+    "windows/system_security_policies.table:windows"
+    "windows/system_security_registry.table:windows"	
     "yara/yara_events.table:linux,macos"
     "yara/yara.table:linux,macos,windows"
   )

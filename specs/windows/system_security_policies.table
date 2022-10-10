@@ -1,0 +1,28 @@
+table_name("system_security_policies")
+description("Account policies and Audit policies that administrators configure locally and through a domain. This table mimics secedit tool securitypolicy export output.")
+schema([
+    Column("MinimumPasswordAge", INTEGER, "Determines the minimum number of days that a password must be used before the user can change it"),
+    Column("MaximumPasswordAge", INTEGER, "Determines the maximum number of days that a password can be used before the client requires the user to change it"),
+    Column("MinimumPasswordLength", INTEGER, "Determines the least number of characters that can make up a password for a user account"),
+    Column("PasswordComplexity", INTEGER, "Determines whether passwords must meet a series of strong-password guidelines"),
+    Column("PasswordHistorySize", INTEGER, "Number of unique new passwords that must be associated with a user account before an old password can be reused"),
+    Column("LockoutBadCount", INTEGER, "Number of failed logon attempts after which a user account MUST be locked out"),
+    Column("RequireLogonToChangePassword", INTEGER, "Determines if logon session is required to change the password"),
+    Column("ForceLogoffWhenHourExpire", INTEGER, "Determines whether SMB client sessions with the SMB server will be forcibly disconnected when the client's logon hours expire"),
+    Column("NewAdministratorName", TEXT, "Determines the name of the Administrator account on the local computer"),
+    Column("NewGuestName", TEXT, "Determines the name of the Guest account on the local computer"),
+    Column("ClearTextPassword", INTEGER, "Determines whether passwords MUST be stored by using reversible encryption"),
+    Column("LSAAnonymousNameLookup", INTEGER, "Determines if an anonymous user is allowed to query the local LSA policy"),
+    Column("EnableAdminAccount", INTEGER, "Determines whether the Administrator account on the local computer is enabled"),
+    Column("EnableGuestAccount", INTEGER, "Determines whether the Guest account on the local computer is enabled"),
+    Column("AuditSystemEvents", INTEGER, "Determines whether the operating system MUST audit System Change, System Startup, System Shutdown, Authentication Component Load, and Loss or Excess of Security events"),
+    Column("AuditLogonEvents", INTEGER, "Determines whether the operating system MUST audit each instance of a user attempt to log on or log off this computer"),
+    Column("AuditObjectAccess", INTEGER, "Determines whether the operating system MUST audit each instance of user attempts to access a non-Active Directory object that has its own SACL specified"),
+    Column("AuditPrivilegeUse", INTEGER, "Determines whether the operating system MUST audit each instance of user attempts to exercise a user right"),
+    Column("AuditPolicyChange", INTEGER, "Determines whether the operating system MUST audit each instance of user attempts to change user rights assignment policy, audit policy, account policy, or trust policy"),
+    Column("AuditAccountManage", INTEGER, "Determines whether the operating system MUST audit each event of account management on a computer"),
+    Column("AuditProcessTracking", INTEGER, "Determines whether the operating system MUST audit process-related events"),
+    Column("AuditDSAccess", INTEGER, "Determines whether the operating system MUST audit each instance of user attempts to access an Active Directory object that has its own system access control list (SACL) specified"),
+    Column("AuditAccountLogon", INTEGER, "Determines whether the operating system MUST audit each time this computer validates the credentials of an account"),
+])
+implementation("system_security@genSystemSecurityPolicies")

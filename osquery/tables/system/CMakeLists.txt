@@ -209,6 +209,7 @@ function(generateOsqueryTablesSystemSystemtable)
       windows/smbios_tables.cpp
       windows/startup_items.cpp
       windows/system_info.cpp
+      windows/system_security_policies.cpp
       windows/user_groups.cpp
       windows/users.cpp
       windows/userassist.cpp
