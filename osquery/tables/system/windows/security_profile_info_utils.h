@@ -21,32 +21,32 @@ class SceClientHelper : public boost::noncopyable {
   /**
    * @brief SCE flag that indicates SCE SYSTEM profile request
    */
-  static constexpr DWORD kSceSystemFlag = 300;
+  static constexpr DWORD sceSystemFlag = 300;
 
   /**
    * @brief SCE bitmask flag that indicates ALL security information flags
    */
-  static constexpr DWORD kSceAreaAllFlag = 0xFFFFL;
+  static constexpr DWORD sceAreaAllFlag = 0xFFFFL;
 
   /**
    * @brief SCE profile array subdata size
    */
-  static constexpr DWORD kSceInfoMaxArray = 3;
+  static constexpr DWORD sceInfoMaxArray = 3;
 
   /**
    * @brief Name of the DLL containing the SCE RPC Client API
    */
-  const std::string kTargetSCEDLL = "scecli.dll";
+  const std::string targetSceDLL = "scecli.dll";
 
   /**
    * @brief Name of the SceFreeMemory export function in scecli.dll
    */
-  const std::string kSceFreeMemoryFn = "SceFreeMemory";
+  const std::string sceFreeMemoryFn = "SceFreeMemory";
 
   /**
    * @brief Name of the SceGetSecurityProfileInfo export function in scecli.dll
    */
-  const std::string kSceGetSecProfileInfoFn = "SceGetSecurityProfileInfo";
+  const std::string sceGetSecProfileInfoFn = "SceGetSecurityProfileInfo";
 
  public:
   /**
@@ -78,10 +78,10 @@ class SceClientHelper : public boost::noncopyable {
     PVOID Unk7;
     PVOID Unk8;
     PVOID Unk9;
-    DWORD MaxLogSize[kSceInfoMaxArray];
-    DWORD RetentionLog[kSceInfoMaxArray];
-    DWORD RetentionLogDays[kSceInfoMaxArray];
-    DWORD RestrictAccessGuest[kSceInfoMaxArray];
+    DWORD MaxLogSize[sceInfoMaxArray];
+    DWORD RetentionLog[sceInfoMaxArray];
+    DWORD RetentionLogDays[sceInfoMaxArray];
+    DWORD RestrictAccessGuest[sceInfoMaxArray];
     DWORD AuditSystemEvents;
     DWORD AuditLogonEvents;
     DWORD AuditObjectsAccess;

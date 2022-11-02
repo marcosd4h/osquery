@@ -23,7 +23,7 @@ SceClientHelper::SceClientHelper() {}
 SceClientHelper::~SceClientHelper() {
   if (handleSceDLL_ != nullptr) {
     if (!FreeLibrary(handleSceDLL_)) {
-      LOG(ERROR) << "Failed to free module handle of dll " << kTargetSCEDLL;
+      LOG(ERROR) << "Failed to free module handle of dll " << targetSceDLL;
     }
 
     handleSceDLL_ = nullptr;
@@ -57,37 +57,37 @@ Status SceClientHelper::initialize() {
   // If mapped module is not found, LoadLibraryExA() gets called to load the
   // module from system32 folder.
   bool increasedRefCount = false;
-  HMODULE dllHandle = GetModuleHandleA(kTargetSCEDLL.c_str());
+  HMODULE dllHandle = GetModuleHandleA(targetSceDLL.c_str());
   if (dllHandle == nullptr) {
     // Library was not there in memory already, so we are loading here it and
     // freeing it on the class destructor
     increasedRefCount = true;
     dllHandle = LoadLibraryExA(
-        kTargetSCEDLL.c_str(), NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+        targetSceDLL.c_str(), NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
   }
 
   // An invalid module handle means that the DLL couldn't be loaded
   if (dllHandle == nullptr) {
-    return Status::failure(kTargetSCEDLL + " dll couldn't be loaded");
+    return Status::failure(targetSceDLL + " dll couldn't be loaded");
   }
 
   // Getting the address to exported SceFreeMemory function
-  PVOID sceFreeMemoryAddr = GetProcAddress(dllHandle, kSceFreeMemoryFn.c_str());
+  PVOID sceFreeMemoryAddr = GetProcAddress(dllHandle, sceFreeMemoryFn.c_str());
   if (sceFreeMemoryAddr == nullptr) {
     if (increasedRefCount) {
       FreeLibrary(dllHandle);
     }
-    return Status::failure(kSceFreeMemoryFn + " couldn't be loaded");
+    return Status::failure(sceFreeMemoryFn + " couldn't be loaded");
   }
 
   // Getting the address to exported SceGetSecurityProfileInfo function
   PVOID sceGetProfileInforAddr =
-      GetProcAddress(dllHandle, kSceGetSecProfileInfoFn.c_str());
+      GetProcAddress(dllHandle, sceGetSecProfileInfoFn.c_str());
   if (sceGetProfileInforAddr == nullptr) {
     if (increasedRefCount) {
       FreeLibrary(dllHandle);
     }
-    return Status::failure(kSceGetSecProfileInfoFn + " couldn't be loaded");
+    return Status::failure(sceGetSecProfileInfoFn + " couldn't be loaded");
   }
 
   // Assigning the address of the exports in memory so they can be called thru
@@ -136,14 +136,14 @@ Status SceClientHelper::releaseSceProfileData(const PVOID& profileData) {
 
   // Sanity check on function pointer about to be used
   if (sceFreeMemory_ == nullptr) {
-    return Status::failure(kSceFreeMemoryFn + " cannot be used");
+    return Status::failure(sceFreeMemoryFn + " cannot be used");
   }
 
   // Calling the runtime-linked function and checking return code
-  DWORD retCode = sceFreeMemory_(profileData, kSceAreaAllFlag);
+  DWORD retCode = sceFreeMemory_(profileData, sceAreaAllFlag);
   if (retCode != ERROR_SUCCESS) {
     return Status::failure(
-        kSceGetSecProfileInfoFn +
+        sceGetSecProfileInfoFn +
         " call failed with error: " + std::to_string(retCode));
   }
 
@@ -171,17 +171,17 @@ Status SceClientHelper::getSceSecurityProfileInfo(PVOID& profileData) {
 
   // Sanity check on function pointer about to be used
   if (sceGetSecurityProfileInfo_ == nullptr) {
-    return Status::failure(kSceGetSecProfileInfoFn + " cannot be used");
+    return Status::failure(sceGetSecProfileInfoFn + " cannot be used");
   }
 
   // Calling the runtime-linked function and returning the obtained data
   PVOID workProfileData = nullptr;
   DWORD retCode = sceGetSecurityProfileInfo_(
-      nullptr, kSceSystemFlag, kSceAreaAllFlag, &workProfileData, nullptr);
+      nullptr, sceSystemFlag, sceAreaAllFlag, &workProfileData, nullptr);
 
   if (retCode != ERROR_SUCCESS) {
     return Status::failure(
-        kSceGetSecProfileInfoFn +
+        sceGetSecProfileInfoFn +
         " call failed with error: " + std::to_string(retCode));
   }
 
@@ -189,7 +189,7 @@ Status SceClientHelper::getSceSecurityProfileInfo(PVOID& profileData) {
   Status sceProfileDataStatus = isValidSceProfileData(workProfileData);
   if (!sceProfileDataStatus.ok()) {
     return Status::failure(
-        kSceGetSecProfileInfoFn +
+        sceGetSecProfileInfoFn +
         " returned invalid data: " + sceProfileDataStatus.getMessage());
   }
 
